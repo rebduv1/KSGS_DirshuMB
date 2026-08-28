@@ -1,0 +1,110 @@
+# Rebuilds shiurim.json whenever an audio file is added, renamed or removed.
+# Nothing to configure. Runs on GitHub's machines, free on public repos.
+
+name: Update shiur list
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'audio/**'
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-shiurim
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild shiurim.json from the audio folder
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+
+          AUDIO    = 'audio'
+          MANIFEST = 'shiurim.json'
+          EXTS     = ('.mp3', '.m4a')
+
+          def parse(filename):
+              """Pull siman / seif katan out of MB-OC-###-###-###.mp3"""
+              base = re.sub(r'\.[^.]+$', '', filename)
+              for rx, keys in (
+                  (r'MB-OC-(\d{3})-(\d{3})-to-(\d{3})-(\d{3})', ('siman','skFrom','simanTo','skTo')),
+                  (r'MB-OC-(\d{3})-(\d{3})-(\d{3})',            ('siman','skFrom','skTo')),
+                  (r'MB-OC-(\d{3})-(\d{3})',                    ('siman','skFrom')),
+              ):
+                  m = re.search(rx, base, re.I)
+                  if m:
+                      return dict(zip(keys, (int(g) for g in m.groups())))
+              return None
+
+          doc = {}
+          if os.path.exists(MANIFEST):
+              try:
+                  with open(MANIFEST, encoding='utf-8') as f:
+                      doc = json.load(f)
+              except Exception as e:
+                  print(f'::warning::shiurim.json could not be read ({e}); rebuilding it.')
+                  doc = {}
+
+          # Remember hand-written entries so custom topics and dates survive
+          kept = {}
+          for e in doc.get('shiurim', []):
+              if isinstance(e, dict) and e.get('file'):
+                  kept[e['file']] = e
+              elif isinstance(e, str):
+                  kept[e] = None
+
+          found = []
+          if os.path.isdir(AUDIO):
+              for n in sorted(os.listdir(AUDIO)):
+                  if n.lower().endswith(EXTS):
+                      found.append(f'{AUDIO}/{n}')
+
+          def order(path):
+              d = parse(os.path.basename(path)) or {}
+              return (d.get('siman', 10**6), d.get('skFrom', 10**6), path)
+
+          found.sort(key=order)
+
+          shiurim = []
+          for path in found:
+              if parse(os.path.basename(path)) is None:
+                  print(f'::warning::{path} does not match MB-OC-###-###-### '
+                        f'and will not appear on the site.')
+              prev = kept.get(path)
+              shiurim.append(prev if isinstance(prev, dict) else path)
+
+          for gone in (k for k in kept if k not in found):
+              print(f'::notice::{gone} is no longer in the audio folder; removed from the list.')
+
+          doc['shiurim'] = shiurim
+          new = json.dumps(doc, ensure_ascii=False, indent=2) + '\n'
+          old = open(MANIFEST, encoding='utf-8').read() if os.path.exists(MANIFEST) else ''
+
+          if new == old:
+              print(f'No change. {len(shiurim)} shiurim listed.')
+          else:
+              with open(MANIFEST, 'w', encoding='utf-8') as f:
+                  f.write(new)
+              print(f'Updated shiurim.json - {len(shiurim)} shiurim listed.')
+          PY
+
+      - name: Commit the updated list
+        run: |
+          if [ -z "$(git status --porcelain shiurim.json)" ]; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shiurim.json
+          git commit -m "Update shiur list"
+          git push
