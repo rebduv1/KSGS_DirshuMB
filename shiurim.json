@@ -1,0 +1,18 @@
+{
+  "shul": "Khal Sunset Grove Sefard",
+  "series": "Dirshu Mishnah Berurah",
+  "maggidShiur": "ר׳ דוד קליין",
+
+  "_howto": "Name files MB-OC-<siman>-<skFrom>-<skTo>.mp3 with three digits each, e.g. MB-OC-429-001-004.mp3. The page reads the siman and seif katan from the filename. Add a topic line for each. For a shiur crossing into the next siman use MB-OC-429-014-to-430-003.mp3. A bare filename with no topic also works: just \"audio/MB-OC-430-001-006.mp3\",",
+
+  "shiurim": [
+    {
+      "file": "audio/MB-OC-429-001-004.mp3",
+      "topic": "Shoalin v'dorshin b'hilchos haPesach shloshim yom kodem; the Shabbos HaGadol drasha"
+    },
+    {
+      "file": "audio/MB-OC-429-005-014.mp3",
+      "topic": "Ma'os chittim, and the halachos of chodesh Nissan"
+    }
+  ]
+}
