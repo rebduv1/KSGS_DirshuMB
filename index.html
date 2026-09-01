@@ -258,9 +258,17 @@ const simanNum=s=>crosses(s)
 
 function skHe(s){
   if(s.skFrom==null) return '';
-  if(crosses(s)) return `${SK} ${gematria(s.skFrom)} ${NDASH} ${SIMAN} ${gematria(s.simanTo)} ${SK} ${gematria(s.skTo)}`;
-  if(s.skTo==null||s.skTo===s.skFrom) return `${SK} ${gematria(s.skFrom)}`;
-  return `${SK} ${gematria(s.skFrom)}${NDASH}${gematria(s.skTo)}`;
+  if(crosses(s)) return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)}\n${NDASH}\n${SIMAN} ${gematria(s.simanTo)} ${SK} ${gematria(s.skTo)}`;
+  if(s.skTo==null||s.skTo===s.skFrom) return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)}`;
+  return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)}${NDASH}${gematria(s.skTo)}`;
+}
+
+/* For dropdown: single line, full siman-sk pairs */
+function skHeDropdown(s){
+  if(s.skFrom==null) return '';
+  if(crosses(s)) return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)} ${NDASH} ${SIMAN} ${gematria(s.simanTo)} ${SK} ${gematria(s.skTo)}`;
+  if(s.skTo==null||s.skTo===s.skFrom) return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)}`;
+  return `${SIMAN} ${gematria(s.siman)} ${SK} ${gematria(s.skFrom)}${NDASH}${gematria(s.skTo)}`;
 }
 function skEn(s){
   if(s.skFrom==null) return 'Siman '+s.siman;
@@ -350,7 +358,7 @@ async function boot(){
     if(g!==group){ group=g; og=document.createElement('optgroup'); og.label=g; sel.append(og); }
     const o=document.createElement('option');
     o.value=n;
-    o.textContent=`${SIMAN} ${simanNum(s)} ${skHe(s)}${LRM}  \u00B7  ${skEn(s)}`;
+    o.textContent=`${skHeDropdown(s)}${LRM}  \u00B7  ${s.topic||skEn(s)}`;
     og.append(o);
   });
 
