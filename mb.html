@@ -307,23 +307,23 @@ function parseFile(path){
 
   const rest=name.slice(m.index+m[0].length).replace(/^[-_\s]+/,'');
   
-  /* try to extract a date in YYYY-MM-DD format */
-  const dateMatch=rest.match(/(\d{4})-(\d{2})-(\d{2})/);
-  if(dateMatch){
-    const d=new Date(dateMatch[1]+'-'+dateMatch[2]+'-'+dateMatch[3]+'T12:00:00');
-    if(!isNaN(d.getTime())){
-      out.date=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-      /* remove the date from the topic */
-      const topicRest=rest.slice(dateMatch.index+dateMatch[0].length)
-                           .replace(/^[-_\s]+/,'')
-                           .replace(/[-_]+/g,' ')
-                           .trim();
-      if(topicRest) out.topic=topicRest;
-    }
-  }else{
-    const topicRest=rest.replace(/[-_]+/g,' ').trim();
-    if(topicRest) out.topic=topicRest;
+  /* the date may be written 2026-10-16, October-16-2026 or October-9-and-10-2026;
+     it is lifted out and whatever is left becomes the topic */
+  const MONTHS='January|February|March|April|May|June|July|August|September|October|November|December';
+  let dm,date=null,cut=null;
+  if((dm=rest.match(/(\d{4})-(\d{2})-(\d{2})/))){
+    const d=new Date(`${dm[1]}-${dm[2]}-${dm[3]}T12:00:00`);
+    if(!isNaN(d)) date=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    cut=dm;
+  }else if((dm=rest.match(new RegExp(`(${MONTHS})-(\\d{1,2})(?:-and-(\\d{1,2}))?-(\\d{4})`,'i')))){
+    const mon=dm[1][0].toUpperCase()+dm[1].slice(1).toLowerCase();
+    date=`${mon} ${+dm[2]}${dm[3]?'–'+(+dm[3]):''}, ${dm[4]}`;
+    cut=dm;
   }
+  const leftover=cut ? rest.slice(0,cut.index)+'-'+rest.slice(cut.index+cut[0].length) : rest;
+  const topic=leftover.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+  if(date) out.date=date;
+  if(topic) out.topic=topic;
   return out;
 }
 
@@ -419,7 +419,7 @@ function load(n,autoplay){
   audio.src=s.file;
   audio.playbackRate=SPEEDS[sp];
   $('cur').textContent='0:00'; $('dur').textContent='--:--'; $('seek').value=0;
-  $('prev').disabled=i===0; $('next').disabled=i===list.length-1;
+  $('prev').disabled=i===list.length-1; $('next').disabled=i===0;   /* list is newest-first */
   if(autoplay) audio.play().catch(()=>{});
   setIcon();
 }
@@ -445,16 +445,16 @@ function setMediaSession(s){
   act('pause',()=>audio.pause());
   act('seekbackward',()=>$('back').click());
   act('seekforward',()=>$('fwd').click());
-  act('previoustrack',()=>{ if(i>0) load(i-1,true); });
-  act('nexttrack',()=>{ if(i<list.length-1) load(i+1,true); });
+  act('previoustrack',()=>{ if(i<list.length-1) load(i+1,true); });
+  act('nexttrack',()=>{ if(i>0) load(i-1,true); });
   act('seekto',d=>{ if(d.seekTime!=null) audio.currentTime=d.seekTime; });
 }
 
 $('play').onclick=()=>{ audio.paused?audio.play().catch(()=>{}):audio.pause(); };
 $('back').onclick=()=>audio.currentTime=Math.max(0,audio.currentTime-15);
 $('fwd').onclick=()=>audio.currentTime=Math.min(audio.duration||0,audio.currentTime+15);
-$('prev').onclick=()=>i>0&&load(i-1,!audio.paused);
-$('next').onclick=()=>i<list.length-1&&load(i+1,!audio.paused);
+$('prev').onclick=()=>i<list.length-1&&load(i+1,!audio.paused);
+$('next').onclick=()=>i>0&&load(i-1,!audio.paused);
 $('speed').onclick=()=>{ sp=(sp+1)%SPEEDS.length; audio.playbackRate=SPEEDS[sp]; $('speed').innerHTML=SPEEDS[sp]+'&times;'; };
 
 audio.addEventListener('play',setIcon);
@@ -465,7 +465,7 @@ audio.addEventListener('timeupdate',()=>{
   $('seek').value=Math.round(audio.currentTime/audio.duration*1000);
   $('cur').textContent=mmss(audio.currentTime);
 });
-audio.addEventListener('ended',()=>{ if(i<list.length-1) load(i+1,true); });
+audio.addEventListener('ended',()=>{ if(i>0) load(i-1,true); });   /* go on to the next shiur */
 audio.addEventListener('error',()=>{
   if(!audio.src)return;
   $('note').hidden=false;
