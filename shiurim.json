@@ -27,13 +27,34 @@
     "audio/MB-OC-440-016-020-September-24-2026-Chiuv-Nifkad-and-Mafkid.mp3",
     "audio/MB-OC-441-001-006-September-25-2026-Halvas-Chometz.mp3",
     "audio/MB-OC-441-007-to-442-001-September-28-2026-Taaruves-Chometz.mp3",
-    "audio/MB-OC-442-002-008-September-29-2006-Roie-L'achila-and-Ain-Roie-Lachila.mp3",
-    "audio/MB-OC-442-009-016-Part-2-September-30-2006-Pas-Sheifsha-and-Chometz-Glue.mp3",
-    "audio/MB-OC-442-009-016-September-30-2006-Pas-Sheifsha-and-Chometz-Glue.mp3",
-    "audio/MB-OC-442-017-027-October-2-2006-Aino-Maachal-Adom-Klal-and-Hemed-Gevinah.mp3",
-    "audio/MB-OC-442-028-038-October-3-2006-Betzek-B'sidkei-Areiva.mp3",
-    "audio/MB-OC-442-039-043-October-4-2006-Chometz-Hamutur-L'kaimo-B'pesach.mp3",
-    "audio/MB-OC-442-044-052-October-5-2006-Chometz-Shenifsal-D'dio.mp3",
+    {
+      "file": "audio/MB-OC-442-002-008-September-29-2006-Roie-L'achila-and-Ain-Roie-Lachila.mp3",
+      "date": "September 29, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-009-016-Part-2-September-30-2006-Pas-Sheifsha-and-Chometz-Glue.mp3",
+      "date": "September 30, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-009-016-September-30-2006-Pas-Sheifsha-and-Chometz-Glue.mp3",
+      "date": "September 30, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-017-027-October-2-2006-Aino-Maachal-Adom-Klal-and-Hemed-Gevinah.mp3",
+      "date": "October 2, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-028-038-October-3-2006-Betzek-B'sidkei-Areiva.mp3",
+      "date": "October 3, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-039-043-October-4-2006-Chometz-Hamutur-L'kaimo-B'pesach.mp3",
+      "date": "October 4, 2026"
+    },
+    {
+      "file": "audio/MB-OC-442-044-052-October-5-2006-Chometz-Shenifsal-D'dio.mp3",
+      "date": "October 5, 2026"
+    },
     "audio/MB-OC-443-001-008-October-6-2026-Zmanim-of-Issur-Chometz.mp3",
     "audio/MB-OC-443-009-014-October-9-and-10-2026-Zmanim-of-Issur-Chometz Continued.mp3",
     "audio/MB-OC-443-015-to-444-008-October-12-2026-Erev-Pesach-Sh'Chal-B'Shabbos.mp3",
