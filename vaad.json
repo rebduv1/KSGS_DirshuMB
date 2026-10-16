@@ -1,0 +1,8 @@
+{
+  "shul": "Khal Sunset Grove Sefard",
+  "series": "Thursday Night Vaad",
+  "maggid": "הרב ישראל יאנקעלאוויטש שליט״א",
+  "maggidEn": "Rabbi Yisroel Jankelowitz",
+  "_howto": "Name the file VAAD-<YYYY-MM-DD>-Topic-Words.mp3, e.g. VAAD-2026-10-22-Hakaras-HaTov.mp3. Drop it in the audio folder; this list rebuilds itself.",
+  "shiurim": []
+}
