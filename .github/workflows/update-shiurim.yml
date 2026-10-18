@@ -1,4 +1,4 @@
-# Rebuilds shiurim.json, oraysa.json and vaad.json whenever an audio file is added, renamed or removed.
+# Rebuilds shiurim.json, oraysa.json, vaad.json and sunday.json whenever an audio file is added, renamed or removed.
 # Nothing to configure. Runs on GitHub's machines, free on public repos.
 
 name: Update shiur list
@@ -59,11 +59,12 @@ jobs:
               return lambda path: ((parse(os.path.basename(path)) or {}).get('iso', '9999'), path)
 
           # manifest, filename parser, sort order, naming hint
-          ORAYSA, VAAD = dated('ORAYSA'), dated('VAAD')
+          ORAYSA, VAAD, SUNDAY = dated('ORAYSA'), dated('VAAD'), dated('(?:FREIDLANDER|FRIEDLANDER)')
           LISTS = [
               ('shiurim.json', mb,     mb_order,           'MB-OC-###-###-###-...'),
               ('oraysa.json',  ORAYSA, date_order(ORAYSA), 'ORAYSA-Masechta-###a-YYYY-MM-DD'),
               ('vaad.json',    VAAD,   date_order(VAAD),   'VAAD-YYYY-MM-DD-Topic'),
+              ('sunday.json',  SUNDAY, date_order(SUNDAY), 'FREIDLANDER-YYYY-MM-DD-Topic'),
           ]
 
           found = []
@@ -113,12 +114,12 @@ jobs:
 
       - name: Commit the updated list
         run: |
-          if [ -z "$(git status --porcelain shiurim.json oraysa.json vaad.json)" ]; then
+          if [ -z "$(git status --porcelain shiurim.json oraysa.json vaad.json sunday.json)" ]; then
             echo "Nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add shiurim.json oraysa.json vaad.json
+          git add shiurim.json oraysa.json vaad.json sunday.json
           git commit -m "Update shiur list"
           git push

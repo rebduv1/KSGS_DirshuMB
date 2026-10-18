@@ -157,12 +157,14 @@ button:disabled{opacity:.32;cursor:default}
    One page serves every non-MB shiur. Which one is chosen by ?s=
      series.html?s=oraysa   Oraysa       ORAYSA-Shabbos-024a-2026-10-20.mp3
      series.html?s=vaad     Vaad         VAAD-2026-10-22-Topic-Words.mp3
+     series.html?s=sunday   Sunday       FREIDLANDER-2026-10-18-Topic-Words.mp3
    The list for each comes from its own JSON file, rebuilt by the
    GitHub Action whenever audio is uploaded.
    ===================================================================== */
 const SERIES={
   oraysa:{manifest:'oraysa.json', name:'Oraysa',            kind:'daf'},
-  vaad:  {manifest:'vaad.json',   name:'Thursday Night Vaad', kind:'date'}
+  vaad:  {manifest:'vaad.json',   name:'Thursday Night Vaad', kind:'date', prefix:'VAAD'},
+  sunday:{manifest:'sunday.json', name:'Sunday Shiur',        kind:'date', prefix:'FREIDLANDER|FRIEDLANDER'}
 };
 
 /* ---- Hebrew numerals ---- */
@@ -217,15 +219,16 @@ const words=s=>(s||'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
    ORAYSA-Shabbos-024a-2026-10-20.mp3
    ORAYSA-Shabbos-024a-to-025b-2026-10-20.mp3      (spans more than one amud)
    ORAYSA-Bava-Kamma-012b-2026-10-20-Optional-Topic.mp3
-   VAAD-2026-10-22-Topic-Words.mp3                                     */
+   VAAD-2026-10-22-Topic-Words.mp3
+   FREIDLANDER-2026-10-18-Topic-Words.mp3                              */
 function parseDaf(name){
   const m=name.match(/^ORAYSA-(.+?)-(\d{1,3})([ab])?(?:-to-(\d{1,3})([ab])?)?-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
   if(!m) return null;
   return {masEn:words(m[1]), daf:+m[2], amud:(m[3]||'').toLowerCase(),
           dafTo:m[4]?+m[4]:null, amudTo:(m[5]||'').toLowerCase(), iso:m[6], topic:words(m[7])};
 }
-function parseVaad(name){
-  const m=name.match(/^VAAD-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
+function parseDated(name){
+  const m=name.match(new RegExp(`^(?:${CFG.prefix})-(\\d{4}-\\d{2}-\\d{2})(?:-(.*))?$`,'i'));
   return m ? {iso:m[1], topic:words(m[2])} : null;
 }
 
@@ -242,8 +245,8 @@ const VIEW={
     group:s=>s.masEn
   },
   date:{
-    parse:parseVaad,
-    arch:s=>{const h=hebDate(s.iso)||{}; return {label:h.month||'ועד', num:h.day||'', line:h.year||''};},
+    parse:parseDated,
+    arch:s=>{const h=hebDate(s.iso)||{}; return {label:h.month||'', num:h.day||'', line:h.year||''};},
     en:s=>shortDate(s.iso),
     option:s=>`${shortDate(s.iso)}${s.topic?'  ·  '+s.topic:''}`,
     group:s=>{const x=new Date(s.iso+'T12:00:00');return x.toLocaleDateString('en-US',{month:'long',year:'numeric'});}

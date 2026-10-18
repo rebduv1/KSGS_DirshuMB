@@ -7,7 +7,7 @@
 <meta name="description" content="Shiur recordings from Khal Sunset Grove Sefard.">
 <meta name="theme-color" content="#EFF2F1">
 <meta property="og:title" content="Shiurim · Khal Sunset Grove Sefard">
-<meta property="og:description" content="Dirshu Mishnah Berurah, Oraysa and the Thursday Night Vaad">
+<meta property="og:description" content="Oraysa, the Thursday Night Vaad, the Sunday Shiur and Dirshu Mishnah Berurah">
 <meta property="og:image" content="logo.png">
 <meta property="og:type" content="website">
 <link rel="icon" href="logo.png">
@@ -101,6 +101,16 @@ body{
       </span>
       <span class="go" aria-hidden="true">&rarr;</span>
     </a></li>
+    <li><a class="card" href="series.html?s=sunday">
+      <span class="mini" aria-hidden="true">א׳</span>
+      <span>
+        <span class="title">Sunday Shiur</span>
+        <span class="who" style="display:block" id="sundayWho"></span>
+        <span class="latest" id="sundayLatest" style="display:block"></span>
+      </span>
+      <span class="go" aria-hidden="true">&rarr;</span>
+    </a></li>
+
     <li><a class="card" href="mb.html">
       <span class="mini" aria-hidden="true">מ״ב</span>
       <span>
@@ -154,6 +164,9 @@ latestDated('oraysa.json',
 latestDated('vaad.json',
   /^VAAD-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
   m=>words(m.groups.t)||'Vaad','vaadWho','vaadLatest');
+latestDated('sunday.json',
+  /^(?:FREIDLANDER|FRIEDLANDER)-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
+  m=>words(m.groups.t)||'Sunday Shiur','sundayWho','sundayLatest');
 </script>
 </body>
 </html>
