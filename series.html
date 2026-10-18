@@ -207,7 +207,10 @@ function hebDate(iso){
     const d=new Date(iso+'T12:00:00');
     const parts=new Intl.DateTimeFormat('en-u-ca-hebrew',{day:'numeric',year:'numeric'}).formatToParts(d);
     const day=+parts.find(p=>p.type==='day').value, year=+parts.find(p=>p.type==='year').value;
-    const month=new Intl.DateTimeFormat('he-u-ca-hebrew',{month:'long'}).format(d);
+    /* browsers spell some months in modern full spelling; use the traditional one */
+    const FIX={'חשוון':'חשון','מרחשוון':'מרחשון','סיוון':'סיון'};
+    const raw=new Intl.DateTimeFormat('he-u-ca-hebrew',{month:'long'}).format(d);
+    const month=FIX[raw]||raw;
     return {day:gematria(day), month, year:gematria(year%1000)};
   }catch(e){ return null; }
 }
