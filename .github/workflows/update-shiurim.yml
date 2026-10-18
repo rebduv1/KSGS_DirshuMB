@@ -59,12 +59,12 @@ jobs:
               return lambda path: ((parse(os.path.basename(path)) or {}).get('iso', '9999'), path)
 
           # manifest, filename parser, sort order, naming hint
-          ORAYSA, VAAD, SUNDAY = dated('ORAYSA'), dated('VAAD'), dated('(?:FREIDLANDER|FRIEDLANDER)')
+          ORAYSA, VAAD, SUNDAY = dated('ORAYSA'), dated('VAAD'), dated('(?:FRIEDLANDER|FREIDLANDER)')
           LISTS = [
               ('shiurim.json', mb,     mb_order,           'MB-OC-###-###-###-...'),
               ('oraysa.json',  ORAYSA, date_order(ORAYSA), 'ORAYSA-Masechta-###a-YYYY-MM-DD'),
               ('vaad.json',    VAAD,   date_order(VAAD),   'VAAD-YYYY-MM-DD-Topic'),
-              ('sunday.json',  SUNDAY, date_order(SUNDAY), 'FREIDLANDER-YYYY-MM-DD-Topic'),
+              ('sunday.json',  SUNDAY, date_order(SUNDAY), 'FRIEDLANDER-YYYY-MM-DD-Topic'),
           ]
 
           found = []

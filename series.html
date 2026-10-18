@@ -157,14 +157,14 @@ button:disabled{opacity:.32;cursor:default}
    One page serves every non-MB shiur. Which one is chosen by ?s=
      series.html?s=oraysa   Oraysa       ORAYSA-Shabbos-024a-2026-10-20.mp3
      series.html?s=vaad     Vaad         VAAD-2026-10-22-Topic-Words.mp3
-     series.html?s=sunday   Sunday       FREIDLANDER-2026-10-18-Topic-Words.mp3
+     series.html?s=sunday   Sunday       FRIEDLANDER-2026-10-18-Topic-Words.mp3
    The list for each comes from its own JSON file, rebuilt by the
    GitHub Action whenever audio is uploaded.
    ===================================================================== */
 const SERIES={
   oraysa:{manifest:'oraysa.json', name:'Oraysa',            kind:'daf'},
   vaad:  {manifest:'vaad.json',   name:'Thursday Night Vaad', kind:'date', prefix:'VAAD'},
-  sunday:{manifest:'sunday.json', name:'Sunday Shiur',        kind:'date', prefix:'FREIDLANDER|FRIEDLANDER'}
+  sunday:{manifest:'sunday.json', name:'Sunday Shiur',        kind:'date', prefix:'FRIEDLANDER|FREIDLANDER'}
 };
 
 /* ---- Hebrew numerals ---- */
@@ -220,7 +220,7 @@ const words=s=>(s||'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
    ORAYSA-Shabbos-024a-to-025b-2026-10-20.mp3      (spans more than one amud)
    ORAYSA-Bava-Kamma-012b-2026-10-20-Optional-Topic.mp3
    VAAD-2026-10-22-Topic-Words.mp3
-   FREIDLANDER-2026-10-18-Topic-Words.mp3                              */
+   FRIEDLANDER-2026-10-18-Topic-Words.mp3                              */
 function parseDaf(name){
   const m=name.match(/^ORAYSA-(.+?)-(\d{1,3})([ab])?(?:-to-(\d{1,3})([ab])?)?-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
   if(!m) return null;

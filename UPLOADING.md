@@ -11,7 +11,7 @@ The name tells the website which shiur it is and what to show. Use hyphens inste
 | **Oraysa** | `ORAYSA-Masechta-DafAmud-Date.mp3` | `ORAYSA-Shabbos-024a-2026-10-20.mp3` |
 | Oraysa, more than one amud | `ORAYSA-Masechta-DafAmud-to-DafAmud-Date.mp3` | `ORAYSA-Shabbos-024a-to-025b-2026-10-20.mp3` |
 | **Thursday Night Vaad** | `VAAD-Date-Topic-Words.mp3` | `VAAD-2026-10-22-Hakaras-HaTov.mp3` |
-| **Sunday Shiur** (R’ Pinchas Freidlander) | `FREIDLANDER-Date-Topic-Words.mp3` | `FREIDLANDER-2026-10-18-Emunah-and-Bitachon.mp3` |
+| **Sunday Shiur** (R’ Pinchas Friedlander) | `FRIEDLANDER-Date-Topic-Words.mp3` | `FRIEDLANDER-2026-10-18-Emunah-and-Bitachon.mp3` |
 | Dirshu Mishnah Berurah | `MB-OC-Siman-SkFrom-SkTo-Topic.mp3` | `MB-OC-445-005-012-October-16-2026-Chometz-Naaseh-Gecholim.mp3` |
 
 - **Daf**: always three digits — `002`, `024`, `112` — followed by `a` or `b` for the amud.

@@ -165,7 +165,7 @@ latestDated('vaad.json',
   /^VAAD-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
   m=>words(m.groups.t)||'Vaad','vaadWho','vaadLatest');
 latestDated('sunday.json',
-  /^(?:FREIDLANDER|FRIEDLANDER)-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
+  /^(?:FRIEDLANDER|FREIDLANDER)-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
   m=>words(m.groups.t)||'Sunday Shiur','sundayWho','sundayLatest');
 </script>
 </body>
