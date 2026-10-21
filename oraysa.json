@@ -5,6 +5,7 @@
   "maggidEn": "Rabbi Yisroel Jankelowitz",
   "_howto": "Name the file ORAYSA-<Masechta>-<daf><a|b>-<YYYY-MM-DD>.mp3, e.g. ORAYSA-Shabbos-024a-2026-10-20.mp3 (three digits for the daf). Spanning more than one amud: ORAYSA-Shabbos-024a-to-025b-2026-10-20.mp3. Drop it in the audio folder; this list rebuilds itself.",
   "shiurim": [
-    "audio/ORAYSA-Yevamos-118b-2026-10-19.mp3"
+    "audio/ORAYSA-Yevamos-118b-2026-10-19.mp3",
+    "audio/ORAYSA-Yevamos-119a-2026-10-20.m4a"
   ]
 }
