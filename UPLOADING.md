@@ -19,9 +19,9 @@ The name tells the website which shiur it is and what to show. Use hyphens inste
 - **Date**: `2026-10-22`, not `10-22-2026` or `October 22`.
 - Avoid apostrophes and commas in topics.
 
-## 2. Make it smaller (recommended)
+## 2. No need to compress
 
-On Windows, drag the recording onto `compress-shiur.bat` (ask David for a copy). Smaller files load faster for listeners and keep the site's storage in check.
+The site compresses large recordings by itself right after upload, keeping the same name. The one limit is GitHub's: a file uploaded through the website can be at most **25 MB**. If a long recording is bigger than that, drag it onto `compress-shiur.bat` first, or send it to David.
 
 ## 3. Upload it
 
