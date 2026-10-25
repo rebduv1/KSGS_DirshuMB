@@ -1,4 +1,5 @@
-# Rebuilds shiurim.json, oraysa.json, vaad.json and sunday.json whenever an audio file is added, renamed or removed.
+# Compresses oversized recordings, then rebuilds shiurim.json, oraysa.json,
+# vaad.json and sunday.json whenever an audio file is added, renamed or removed.
 # Nothing to configure. Runs on GitHub's machines, free on public repos.
 
 name: Update shiur list
@@ -22,6 +23,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Compress recordings that are larger than the site standard
+        # The site standard is 64 kbps (what compress-shiur.bat makes). Anything
+        # above ~80 kbps is re-encoded to 64 kbps mono, same name and format,
+        # so nobody has to compress before uploading.
+        run: |
+          command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
+          shopt -s nullglob nocaseglob
+          for f in audio/*.mp3 audio/*.m4a; do
+            br=$(ffprobe -v error -show_entries format=bit_rate -of default=nw=1:nk=1 "$f" || echo 0)
+            case "$br" in ''|*[!0-9]*) br=0;; esac
+            [ "$br" -le 80000 ] && continue
+            ext="${f##*.}"; tmp="$(mktemp --suffix=."$ext")"
+            case "${ext,,}" in
+              mp3) codec=(-c:a libmp3lame) ;;
+              m4a) codec=(-c:a aac -movflags +faststart) ;;
+            esac
+            if ffmpeg -nostdin -v error -y -i "$f" -vn -map_metadata 0 -ac 1 -b:a 64k "${codec[@]}" "$tmp"; then
+              before=$(du -h "$f" | cut -f1); mv "$tmp" "$f"
+              echo "Compressed $f ($((br/1000)) kbps, $before -> $(du -h "$f" | cut -f1))"
+            else
+              echo "::warning::Could not compress $f; left as uploaded."; rm -f "$tmp"
+            fi
+          done
 
       - name: Rebuild the shiur lists from the audio folder
         run: |
@@ -114,12 +139,12 @@ jobs:
 
       - name: Commit the updated list
         run: |
-          if [ -z "$(git status --porcelain shiurim.json oraysa.json vaad.json sunday.json)" ]; then
+          if [ -z "$(git status --porcelain audio shiurim.json oraysa.json vaad.json sunday.json)" ]; then
             echo "Nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add shiurim.json oraysa.json vaad.json sunday.json
+          git add audio shiurim.json oraysa.json vaad.json sunday.json
           git commit -m "Update shiur list"
           git push
