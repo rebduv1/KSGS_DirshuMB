@@ -5,6 +5,7 @@
   "maggidEn": "Rabbi Yisroel Jankelowitz",
   "_howto": "Name the file VAAD-<YYYY-MM-DD>-Topic-Words.mp3, e.g. VAAD-2026-10-22-Hakaras-HaTov.mp3. Drop it in the audio folder; this list rebuilds itself.",
   "shiurim": [
-    "audio/VAAD-2026-10-22-Lech-Lecha.m4a"
+    "audio/VAAD-2026-10-22-Lech-Lecha.m4a",
+    "audio/VAAD-2026-10-29-Vayera.m4a"
   ]
 }
