@@ -174,8 +174,13 @@ latestDated('oraysa.json',
   /^ORAYSA-(?<mas>.+?)-(?<daf>\d{1,3})(?<amud>[ab])?(?:-to-\d{1,3}[ab]?)?-(?<iso>\d{4}-\d{2}-\d{2})/i,
   m=>`${words(m.groups.mas)} ${+m.groups.daf}${m.groups.amud||''}`,'oraysaWho','oraysaLatest');
 latestDated('mishnayos.json',
-  /^(?:MISHNA|MISHNAYOS)-(?<mas>.+?)-(?<p>\d{1,3})(?:-to-(?<p2>\d{1,3}))?-(?<iso>\d{4}-\d{2}-\d{2})/i,
-  m=>`${words(m.groups.mas)}, Perek ${+m.groups.p}${m.groups.p2?'\u2013'+(+m.groups.p2):''}`,'mishnayosWho','mishnayosLatest');
+  /^(?:MISHNA|MISHNAYOS)-(?<mas>.+?)-(?<p>\d{1,3})(?:\.(?<m>\d{1,3}))?(?:-to-(?<p2>\d{1,3})(?:\.(?<m2>\d{1,3}))?)?-(?<iso>\d{4}-\d{2}-\d{2})/i,
+  m=>{const g=m.groups, mas=words(g.mas), p=+g.p;
+      if(g.m==null) return `${mas}, Perek ${p}${g.p2?'–'+(+g.p2):''}`;
+      if(g.p2==null) return `${mas} ${p}:${+g.m}`;
+      if(g.m2==null) return `${mas} ${p}:${+g.m}–${+g.p2}`;
+      return +g.p2===p ? `${mas} ${p}:${+g.m}–${+g.m2}` : `${mas} ${p}:${+g.m}–${+g.p2}:${+g.m2}`;},
+  'mishnayosWho','mishnayosLatest');
 latestDated('vaad.json',
   /^VAAD-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
   m=>words(m.groups.t)||'Vaad','vaadWho','vaadLatest');

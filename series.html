@@ -274,12 +274,35 @@ function parseDaf(name){
   return {masEn:words(m[1]), daf:+m[2], amud:(m[3]||'').toLowerCase(),
           dafTo:m[4]?+m[4]:null, amudTo:(m[5]||'').toLowerCase(), iso:m[6], topic:words(m[7])};
 }
-/* MISHNA-Peah-001-2026-11-01.mp3          perek 1
-   MISHNA-Peah-001-to-002-2026-11-01.mp3   perakim 1-2 (MISHNAYOS- also accepted) */
+/* MISHNA-Peah-001.002-2026-11-01.mp3              perek 1, mishna 2
+   MISHNA-Peah-001.001-to-001.004-2026-11-01.mp3    perek 1, mishnayos 1-4
+   MISHNA-Peah-001.005-to-002.002-2026-11-01.mp3    across two perakim
+   MISHNA-Peah-001-2026-11-01.mp3                   a whole perek
+   (MISHNAYOS- also accepted)                                            */
 function parsePerek(name){
-  const m=name.match(/^(?:MISHNA|MISHNAYOS)-(.+?)-(\d{1,3})(?:-to-(\d{1,3}))?-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
+  const m=name.match(/^(?:MISHNA|MISHNAYOS)-(.+?)-(\d{1,3})(?:\.(\d{1,3}))?(?:-to-(\d{1,3})(?:\.(\d{1,3}))?)?-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
   if(!m) return null;
-  return {masEn:words(m[1]), perek:+m[2], perekTo:m[3]?+m[3]:null, iso:m[4], topic:words(m[5])};
+  const n=x=>x!=null?+x:null;
+  let s={masEn:words(m[1]), perek:+m[2], mishna:n(m[3]), perekTo:n(m[4]), mishnaTo:n(m[5]), iso:m[6], topic:words(m[7])};
+  /* "001.001-to-004" means mishnayos 1-4 of the same perek */
+  if(s.mishna!=null && s.perekTo!=null && s.mishnaTo==null){ s.mishnaTo=s.perekTo; s.perekTo=s.perek; }
+  if(s.perekTo===s.perek && s.mishnaTo==null) s.perekTo=null;
+  return s;
+}
+/* Hebrew and English labels for a perek / mishna reference */
+const PEREK='פרק', MISHNA='משנה';
+function refHe(s){
+  const p=gematria(s.perek), m=s.mishna!=null?gematria(s.mishna):null;
+  if(s.perekTo==null) return m?`${PEREK} ${p} ${MISHNA} ${m}`:`${PEREK} ${p}`;
+  if(s.perekTo===s.perek) return `${PEREK} ${p} ${MISHNA} ${m}${NDASH}${gematria(s.mishnaTo)}`;
+  const p2=gematria(s.perekTo), m2=s.mishnaTo!=null?gematria(s.mishnaTo):null;
+  return m&&m2 ? `${PEREK} ${p} ${MISHNA} ${m}\n${NDASH}\n${PEREK} ${p2} ${MISHNA} ${m2}` : `פרקים ${p}${NDASH}${p2}`;
+}
+function refEn(s){
+  const one=(p,m)=>m!=null?`${p}:${m}`:`${p}`;
+  if(s.perekTo==null) return s.mishna!=null?`${s.masEn} ${one(s.perek,s.mishna)}`:`${s.masEn}, Perek ${s.perek}`;
+  if(s.perekTo===s.perek) return `${s.masEn} ${s.perek}:${s.mishna}${NDASH}${s.mishnaTo}`;
+  return s.mishna!=null&&s.mishnaTo!=null ? `${s.masEn} ${one(s.perek,s.mishna)}${NDASH}${one(s.perekTo,s.mishnaTo)}` : `${s.masEn}, Perakim ${s.perek}${NDASH}${s.perekTo}`;
 }
 function parseDated(name){
   const m=name.match(new RegExp(`^(?:${CFG.prefix})-(\\d{4}-\\d{2}-\\d{2})(?:-(.*))?$`,'i'));
@@ -300,10 +323,9 @@ const VIEW={
   },
   perek:{
     parse:parsePerek,
-    arch:s=>({label:masHe(s.masEn)||'משנה', num:gematria(s.perek),
-              line:s.perekTo!=null ? `פרקים ${gematria(s.perek)}${NDASH}${gematria(s.perekTo)}` : `פרק ${gematria(s.perek)}`}),
-    en:s=>`${s.masEn}, Perek ${s.perek}${s.perekTo!=null?NDASH+s.perekTo:''}`,
-    option:s=>`${masHe(s.masEn)?masHe(s.masEn)+' ':''}פרק ${gematria(s.perek)}${s.perekTo!=null?NDASH+gematria(s.perekTo):''}${LRM}  ·  ${shortDate(s.iso)}`,
+    arch:s=>({label:masHe(s.masEn)||'משנה', num:gematria(s.perek), line:refHe(s)}),
+    en:refEn,
+    option:s=>`${masHe(s.masEn)?masHe(s.masEn)+' ':''}${refHe(s).replace(/\n/g,' ')}${LRM}  ·  ${shortDate(s.iso)}`,
     group:s=>s.masEn
   },
   date:{

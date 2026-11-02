@@ -3,6 +3,6 @@
   "series": "Mishnayos",
   "maggid": "הרב ישראל יאנקעלאוויטש שליט״א",
   "maggidEn": "Rabbi Yisroel Jankelowitz",
-  "_howto": "Name the file MISHNA-<Masechta>-<perek>-<YYYY-MM-DD>.mp3, e.g. MISHNA-Peah-001-2026-11-01.mp3 (three digits for the perek). More than one perek: MISHNA-Peah-001-to-002-2026-11-01.mp3. Drop it in the audio folder; this list rebuilds itself.",
+  "_howto": "Name the file MISHNA-<Masechta>-<perek>.<mishna>-<YYYY-MM-DD>.mp3, e.g. MISHNA-Peah-001.002-2026-11-01.mp3 for perek 1 mishna 2 (three digits each). Several mishnayos: MISHNA-Peah-001.001-to-001.004-2026-11-01.mp3. Drop it in the audio folder; this list rebuilds itself.",
   "shiurim": []
 }
