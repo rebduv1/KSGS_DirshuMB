@@ -1,5 +1,5 @@
 # Compresses oversized recordings, then rebuilds shiurim.json, oraysa.json,
-# vaad.json and sunday.json whenever an audio file is added, renamed or removed.
+# mishnayos.json, vaad.json and sunday.json whenever an audio file is added, renamed or removed.
 # Nothing to configure. Runs on GitHub's machines, free on public repos.
 
 name: Update shiur list
@@ -85,9 +85,11 @@ jobs:
 
           # manifest, filename parser, sort order, naming hint
           ORAYSA, VAAD, SUNDAY = dated('ORAYSA'), dated('VAAD'), dated('(?:FRIEDLANDER|FREIDLANDER)')
+          MISHNA = dated('(?:MISHNAYOS|MISHNA)')
           LISTS = [
               ('shiurim.json', mb,     mb_order,           'MB-OC-###-###-###-...'),
               ('oraysa.json',  ORAYSA, date_order(ORAYSA), 'ORAYSA-Masechta-###a-YYYY-MM-DD'),
+              ('mishnayos.json', MISHNA, date_order(MISHNA), 'MISHNA-Masechta-###-YYYY-MM-DD'),
               ('vaad.json',    VAAD,   date_order(VAAD),   'VAAD-YYYY-MM-DD-Topic'),
               ('sunday.json',  SUNDAY, date_order(SUNDAY), 'FRIEDLANDER-YYYY-MM-DD-Topic'),
           ]
@@ -139,12 +141,12 @@ jobs:
 
       - name: Commit the updated list
         run: |
-          if [ -z "$(git status --porcelain audio shiurim.json oraysa.json vaad.json sunday.json)" ]; then
+          if [ -z "$(git status --porcelain audio shiurim.json oraysa.json mishnayos.json vaad.json sunday.json)" ]; then
             echo "Nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add audio shiurim.json oraysa.json vaad.json sunday.json
+          git add audio shiurim.json oraysa.json mishnayos.json vaad.json sunday.json
           git commit -m "Update shiur list"
           git push

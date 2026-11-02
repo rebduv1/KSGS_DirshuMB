@@ -9,7 +9,7 @@
 <meta property="og:title" content="KSGS Shul Shiurim">
 <meta property="og:site_name" content="Khal Sunset Grove Sefard">
 <meta property="og:url" content="https://ksgs-shul-shiurim.vercel.app/">
-<meta property="og:description" content="Oraysa, the Thursday Night Vaad, the Sunday Shiur and Dirshu Mishnah Berurah">
+<meta property="og:description" content="Oraysa, Mishnayos, the Thursday Night Vaad, the Sunday Shiur and Dirshu Mishnah Berurah">
 <meta property="og:image" content="https://ksgs-shul-shiurim.vercel.app/logo.png">
 <meta property="og:type" content="website">
 <link rel="icon" href="logo.png">
@@ -94,6 +94,16 @@ body{
       <span class="go" aria-hidden="true">&rarr;</span>
     </a></li>
 
+    <li><a class="card" href="series.html?s=mishnayos">
+      <span class="mini" aria-hidden="true">משנה</span>
+      <span>
+        <span class="title">Mishnayos</span>
+        <span class="who" style="display:block" id="mishnayosWho"></span>
+        <span class="latest" id="mishnayosLatest" style="display:block"></span>
+      </span>
+      <span class="go" aria-hidden="true">&rarr;</span>
+    </a></li>
+
     <li><a class="card" href="series.html?s=vaad">
       <span class="mini" aria-hidden="true">ועד</span>
       <span>
@@ -163,6 +173,9 @@ function latestDated(file,re,label,whoId,latestId){
 latestDated('oraysa.json',
   /^ORAYSA-(?<mas>.+?)-(?<daf>\d{1,3})(?<amud>[ab])?(?:-to-\d{1,3}[ab]?)?-(?<iso>\d{4}-\d{2}-\d{2})/i,
   m=>`${words(m.groups.mas)} ${+m.groups.daf}${m.groups.amud||''}`,'oraysaWho','oraysaLatest');
+latestDated('mishnayos.json',
+  /^(?:MISHNA|MISHNAYOS)-(?<mas>.+?)-(?<p>\d{1,3})(?:-to-(?<p2>\d{1,3}))?-(?<iso>\d{4}-\d{2}-\d{2})/i,
+  m=>`${words(m.groups.mas)}, Perek ${+m.groups.p}${m.groups.p2?'\u2013'+(+m.groups.p2):''}`,'mishnayosWho','mishnayosLatest');
 latestDated('vaad.json',
   /^VAAD-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
   m=>words(m.groups.t)||'Vaad','vaadWho','vaadLatest');

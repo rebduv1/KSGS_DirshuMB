@@ -10,11 +10,14 @@ The name tells the website which shiur it is and what to show. Use hyphens inste
 |---|---|---|
 | **Oraysa** | `ORAYSA-Masechta-DafAmud-Date.mp3` | `ORAYSA-Shabbos-024a-2026-10-20.mp3` |
 | Oraysa, more than one amud | `ORAYSA-Masechta-DafAmud-to-DafAmud-Date.mp3` | `ORAYSA-Shabbos-024a-to-025b-2026-10-20.mp3` |
+| **Mishnayos** | `MISHNA-Masechta-Perek-Date.mp3` | `MISHNA-Peah-001-2026-11-01.mp3` |
+| Mishnayos, more than one perek | `MISHNA-Masechta-Perek-to-Perek-Date.mp3` | `MISHNA-Peah-001-to-002-2026-11-01.mp3` |
 | **Thursday Night Vaad** | `VAAD-Date-Topic-Words.mp3` | `VAAD-2026-10-22-Hakaras-HaTov.mp3` |
 | **Sunday Shiur** (R’ Pinchas Friedlander) | `FRIEDLANDER-Date-Topic-Words.mp3` | `FRIEDLANDER-2026-10-18-Emunah-and-Bitachon.mp3` |
 | Dirshu Mishnah Berurah | `MB-OC-Siman-SkFrom-SkTo-Topic.mp3` | `MB-OC-445-005-012-October-16-2026-Chometz-Naaseh-Gecholim.mp3` |
 
 - **Daf**: always three digits — `002`, `024`, `112` — followed by `a` or `b` for the amud.
+- **Perek** (Mishnayos): always three digits — `001`, `012` — no letter after it.
 - **Masechta**: in English, as normally spelled (`Shabbos`, `Bava-Kamma`, `Kesubos`, `Menachos`…). The site shows it in Hebrew.
 - **Date**: `2026-10-22`, not `10-22-2026` or `October 22`.
 - Avoid apostrophes and commas in topics.

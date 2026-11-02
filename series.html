@@ -198,6 +198,7 @@ button:disabled{opacity:.32;cursor:default}
    ===================================================================== */
 const SERIES={
   oraysa:{manifest:'oraysa.json', name:'Oraysa',            kind:'daf'},
+  mishnayos:{manifest:'mishnayos.json', name:'Mishnayos',  kind:'perek'},
   vaad:  {manifest:'vaad.json',   name:'Thursday Night Vaad', kind:'date', prefix:'VAAD'},
   sunday:{manifest:'sunday.json', name:'Sunday Shiur',        kind:'date', prefix:'FRIEDLANDER|FREIDLANDER'}
 };
@@ -228,7 +229,15 @@ const MASECHTOS=[
  ['שבועות','shevuos shevuot'],['עבודה זרה','avodahzarah avodazara'],['הוריות','horayos horiyos'],
  ['זבחים','zevachim'],['מנחות','menachos menachot'],['חולין','chullin chulin'],
  ['בכורות','bechoros bechorot'],['ערכין','arachin erchin'],['תמורה','temurah'],
- ['כריתות','kereisos krisos'],['מעילה','meilah'],['תמיד','tamid'],['נדה','niddah nidah']
+ ['כריתות','kereisos krisos'],['מעילה','meilah'],['תמיד','tamid'],['נדה','niddah nidah'],
+ /* masechtos with Mishnayos only */
+ ['פאה','peah peiah pea'],['דמאי','demai'],['כלאים','kilayim kilaim'],['שביעית','sheviis shviis sheviit'],
+ ['תרומות','terumos trumos'],['מעשרות','maaseros maasros'],['מעשר שני','maasersheni maasersheini'],
+ ['חלה','challah chala'],['ערלה','orlah orla'],['בכורים','bikkurim bikurim'],['עדיות','eduyos ediyos'],
+ ['אבות','avos pirkeiavos'],['מדות','middos midos'],['קנים','kinnim kinim'],['כלים','keilim kelim'],
+ ['אהלות','ohalos oholos'],['נגעים','negaim'],['פרה','parah para'],['טהרות','taharos tohoros'],
+ ['מקואות','mikvaos mikvaos'],['מכשירין','machshirin'],['זבים','zavim'],['טבול יום','tevulyom'],
+ ['ידים','yadayim'],['עוקצין','uktzin oktzin']
 ];
 const masHe=en=>{
   const k=(en||'').toLowerCase().replace(/[^a-z]/g,'');
@@ -265,6 +274,13 @@ function parseDaf(name){
   return {masEn:words(m[1]), daf:+m[2], amud:(m[3]||'').toLowerCase(),
           dafTo:m[4]?+m[4]:null, amudTo:(m[5]||'').toLowerCase(), iso:m[6], topic:words(m[7])};
 }
+/* MISHNA-Peah-001-2026-11-01.mp3          perek 1
+   MISHNA-Peah-001-to-002-2026-11-01.mp3   perakim 1-2 (MISHNAYOS- also accepted) */
+function parsePerek(name){
+  const m=name.match(/^(?:MISHNA|MISHNAYOS)-(.+?)-(\d{1,3})(?:-to-(\d{1,3}))?-(\d{4}-\d{2}-\d{2})(?:-(.*))?$/i);
+  if(!m) return null;
+  return {masEn:words(m[1]), perek:+m[2], perekTo:m[3]?+m[3]:null, iso:m[4], topic:words(m[5])};
+}
 function parseDated(name){
   const m=name.match(new RegExp(`^(?:${CFG.prefix})-(\\d{4}-\\d{2}-\\d{2})(?:-(.*))?$`,'i'));
   return m ? {iso:m[1], topic:words(m[2])} : null;
@@ -280,6 +296,14 @@ const VIEW={
               line:s.dafTo!=null ? `${dafHe(s.daf,s.amud)}\n${NDASH}\n${dafHe(s.dafTo,s.amudTo)}` : dafHe(s.daf,s.amud)}),
     en:s=>`${s.masEn} ${dafEn(s.daf,s.amud)}${s.dafTo!=null?NDASH+dafEn(s.dafTo,s.amudTo):''}`,
     option:s=>`${masHe(s.masEn)?masHe(s.masEn)+' ':''}${gematria(s.daf)}${s.amud?' '+AMUD[s.amud]:''}${LRM}  ·  ${shortDate(s.iso)}`,
+    group:s=>s.masEn
+  },
+  perek:{
+    parse:parsePerek,
+    arch:s=>({label:masHe(s.masEn)||'משנה', num:gematria(s.perek),
+              line:s.perekTo!=null ? `פרקים ${gematria(s.perek)}${NDASH}${gematria(s.perekTo)}` : `פרק ${gematria(s.perek)}`}),
+    en:s=>`${s.masEn}, Perek ${s.perek}${s.perekTo!=null?NDASH+s.perekTo:''}`,
+    option:s=>`${masHe(s.masEn)?masHe(s.masEn)+' ':''}פרק ${gematria(s.perek)}${s.perekTo!=null?NDASH+gematria(s.perekTo):''}${LRM}  ·  ${shortDate(s.iso)}`,
     group:s=>s.masEn
   },
   date:{
@@ -347,7 +371,7 @@ function load(n,autoplay){
   $('skline').textContent=a.line;
   $('date').textContent=longDate(s.iso);
   $('topic').textContent=s.topic||'';
-  $('meta').textContent=CFG.kind==='daf'?V.en(s):'';
+  $('meta').textContent=(CFG.kind==='daf'||CFG.kind==='perek')?V.en(s):'';
 
   $('dl').href=s.file;
   $('dl').setAttribute('download',
