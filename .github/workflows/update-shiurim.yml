@@ -25,11 +25,19 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Compress recordings that are larger than the site standard
+        # If GitHub's package servers hang, give up after a few minutes and still
+        # rebuild the lists; whatever was skipped gets compressed on the next run.
+        timeout-minutes: 6
+        continue-on-error: true
         # The site standard is 64 kbps (what compress-shiur.bat makes). Anything
         # above ~80 kbps is re-encoded to 64 kbps mono, same name and format,
         # so nobody has to compress before uploading.
         run: |
-          command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
+          if ! command -v ffmpeg >/dev/null; then
+            sudo timeout 180 apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update -qq &&
+            sudo timeout 180 apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 install -y -qq ffmpeg >/dev/null ||
+            { echo "::warning::Could not install ffmpeg this time; recordings left as uploaded."; exit 0; }
+          fi
           shopt -s nullglob nocaseglob
           for f in audio/*.mp3 audio/*.m4a; do
             br=$(ffprobe -v error -show_entries format=bit_rate -of default=nw=1:nk=1 "$f" || echo 0)
