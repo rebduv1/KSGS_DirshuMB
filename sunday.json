@@ -8,6 +8,9 @@
     "audio/friedlander-2026-10-18-Maalas-Tefilas-Ashrei.mp3",
     "audio/FRIEDLANDER-2026-10-25-Mitzvas-Bikur-Choilim.mp3",
     "audio/FRIEDLANDER-2026-11-01-Hachana-Shabbos-Lchol.mp3",
-    "audio/FRIEDLANDER-2026-11-08-Tah-A-B-Inyan-Tashlumin.mp3"
+    {
+      "file": "audio/FRIEDLANDER-2026-11-08-Taah-bInyan-Tashlumin-bTefilah.mp3",
+      "topic": "Taah b'Inyan Tashlumin b'Tefilah"
+    }
   ]
 }
