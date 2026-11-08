@@ -165,9 +165,9 @@ function latestDated(file,re,label,whoId,latestId){
     for(const e of d.shiurim||[]){
       const m=base(e).match(re); if(!m) continue;
       const iso=m.groups.iso;
-      if(!best||iso>best.iso) best={iso,m};
+      if(!best||iso>best.iso) best={iso,m,e};
     }
-    show(latestId, best ? esc(label(best.m))+' · '+short(best.iso) : '');
+    show(latestId, best ? esc(label(best.m,best.e))+' · '+short(best.iso) : '');
   });
 }
 latestDated('oraysa.json',
@@ -183,10 +183,10 @@ latestDated('mishnayos.json',
   'mishnayosWho','mishnayosLatest');
 latestDated('vaad.json',
   /^VAAD-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
-  m=>words(m.groups.t)||'Vaad','vaadWho','vaadLatest');
+  (m,e)=>(e&&e.topic)||words(m.groups.t)||'Vaad','vaadWho','vaadLatest');
 latestDated('sunday.json',
   /^(?:FRIEDLANDER|FREIDLANDER)-(?<iso>\d{4}-\d{2}-\d{2})(?:-(?<t>.*))?$/i,
-  m=>words(m.groups.t)||'Sunday Shiur','sundayWho','sundayLatest');
+  (m,e)=>(e&&e.topic)||words(m.groups.t)||'Sunday Shiur','sundayWho','sundayLatest');
 </script>
 </body>
 </html>
