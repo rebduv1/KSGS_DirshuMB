@@ -78,6 +78,9 @@
     "audio/MB-OC-447-087-091-2026-11-05-Tairuves-Chamutzim.mp3",
     "audio/MB-OC-447-092-097-2026-11-06-Tairuves-Yavesh-bYavesh.mp3",
     "audio/MB-OC-447-098-104-2026-11-09-Tairuves-Mashehu-bNosain-Tam-Lifgam.mp3",
-    "audio/MB-OC-447-105-108-2026-11-10.mp3"
+    {
+      "file": "audio/MB-OC-447-105-108-2026-11-10-Tairuves-Bitul-bShishim-uPachus-mShishim.mp3",
+      "topic": "Tairuves Bitul b'Shishim u'Pachus m'Shishim"
+    }
   ]
 }
