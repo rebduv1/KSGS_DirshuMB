@@ -26,6 +26,10 @@ the only metadata — the site reads everything from it — so most of the work 
    - Report back in 1–3 lines: what went live, where it shows, any name fixes, compressed size.
 5. Do **not** compress by hand. The Action re-encodes anything above ~80 kbps to 64 kbps mono,
    keeping the same name.
+   It gets ffmpeg from PyPI (`imageio-ffmpeg`); apt-get hung on the runners twice, so it isn't used.
+   If the run log says "Could not get ffmpeg", the shiur still goes live uncompressed; re-run the
+   workflow (`gh api -X POST …/actions/workflows/update-shiurim.yml/dispatches -f ref=main`).
+   Always check the uploaded size: still >80 kbps means compression was skipped.
 
 ## File-name rules (all four prefixes uppercase, hyphens only)
 
