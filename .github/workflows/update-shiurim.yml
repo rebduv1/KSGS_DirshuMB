@@ -33,24 +33,27 @@ jobs:
         # above ~80 kbps is re-encoded to 64 kbps mono, same name and format,
         # so nobody has to compress before uploading.
         run: |
-          if ! command -v ffmpeg >/dev/null; then
-            sudo timeout 180 apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update -qq &&
-            sudo timeout 180 apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 install -y -qq ffmpeg >/dev/null ||
-            { echo "::warning::Could not install ffmpeg this time; recordings left as uploaded."; exit 0; }
+          # ffmpeg comes from the imageio-ffmpeg Python package (a self-contained
+          # binary on PyPI). apt-get on the runners hung twice, so it is not used.
+          FF=$(command -v ffmpeg || true)
+          if [ -z "$FF" ]; then
+            timeout 120 python3 -m pip install -q --disable-pip-version-check imageio-ffmpeg &&
+            FF=$(python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())") ||
+            { echo "::warning::Could not get ffmpeg this time; recordings left as uploaded."; exit 0; }
           fi
           shopt -s nullglob nocaseglob
           for f in audio/*.mp3 audio/*.m4a; do
-            br=$(ffprobe -v error -show_entries format=bit_rate -of default=nw=1:nk=1 "$f" || echo 0)
-            case "$br" in ''|*[!0-9]*) br=0;; esac
-            [ "$br" -le 80000 ] && continue
+            kbps=$("$FF" -hide_banner -nostdin -i "$f" 2>&1 | grep -o 'bitrate: [0-9]* kb/s' | head -1 | grep -o '[0-9]*' || true)
+            [ -z "$kbps" ] && continue
+            [ "$kbps" -le 80 ] && continue
             ext="${f##*.}"; tmp="$(mktemp --suffix=."$ext")"
             case "${ext,,}" in
               mp3) codec=(-c:a libmp3lame) ;;
               m4a) codec=(-c:a aac -movflags +faststart) ;;
             esac
-            if ffmpeg -nostdin -v error -y -i "$f" -vn -map_metadata 0 -ac 1 -b:a 64k "${codec[@]}" "$tmp"; then
+            if timeout 600 "$FF" -nostdin -v error -y -i "$f" -vn -map_metadata 0 -ac 1 -b:a 64k "${codec[@]}" "$tmp"; then
               before=$(du -h "$f" | cut -f1); mv "$tmp" "$f"
-              echo "Compressed $f ($((br/1000)) kbps, $before -> $(du -h "$f" | cut -f1))"
+              echo "Compressed $f ($kbps kbps, $before -> $(du -h "$f" | cut -f1))"
             else
               echo "::warning::Could not compress $f; left as uploaded."; rm -f "$tmp"
             fi
