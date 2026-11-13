@@ -47,6 +47,8 @@ Fixes you will routinely make (all seen in practice):
   matching older names like `vDorshin`, `vAchar`); masechta capitalized (`Yevamos`).
 - **Two-digit month and day**: `2026-11-1` → `2026-11-01`. Without this the shiur is skipped.
 - **Three-digit numbers**: daf `2a` → `002a`; siman, se'if katan, perek and mishna are all three digits.
+- **A single se'if katan is written twice** (`MB-OC-448-012-012-…`); with only one, the `202` of the year
+  is read as the end of the range. The site shows a matching pair as one s"k.
 - **No underscores, spaces or stray periods**: `MB-OC-_447` → `MB-OC-447`; `Tairuves_Cont.` →
   `Tairuves-Continued` (use "Continued", as in older names). The only period allowed is the
   Mishnayos `PPP.MMM`.

@@ -16,6 +16,7 @@ The name tells the website which shiur it is and what to show. Use hyphens inste
 | **Sunday Shiur** (R’ Pinchas Friedlander) | `FRIEDLANDER-Date-Topic-Words.mp3` | `FRIEDLANDER-2026-10-18-Emunah-and-Bitachon.mp3` |
 | Dirshu Mishnah Berurah | `MB-OC-Siman-SkFrom-SkTo-Topic.mp3` | `MB-OC-445-005-012-October-16-2026-Chometz-Naaseh-Gecholim.mp3` |
 
+- **Mishnah Berurah, one se'if katan only**: write it twice — `MB-OC-448-012-012-2026-11-13-Topic.mp3`.
 - **Daf**: always three digits — `002`, `024`, `112` — followed by `a` or `b` for the amud.
 - **Perek.Mishna** (Mishnayos): three digits each, joined by a period — `001.002` is perek 1, mishna 2. This is the only place a period is used.
 - **Masechta**: in English, as normally spelled (`Shabbos`, `Bava-Kamma`, `Kesubos`, `Menachos`…). The site shows it in Hebrew.
