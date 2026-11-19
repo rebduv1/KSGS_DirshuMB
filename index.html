@@ -149,8 +149,10 @@ get('shiurim.json').then(d=>{
   let best=null;
   for(const e of d.shiurim||[]){
     const m=base(e).match(/MB-OC-(\d{3})-(\d{3})(?:-to-(\d{3}))?-(\d{3})?/i); if(!m) continue;
-    const k=[+m[1],+m[2]];
-    if(!best||k[0]>best.k[0]||(k[0]===best.k[0]&&k[1]>best.k[1])) best={k,m};
+    /* siman, first s"k, last s"k, then file name (holds the date) */
+    const k=[+m[1],+m[2],+(m[4]||0),base(e)];
+    const later=!best||k[0]-best.k[0]||k[1]-best.k[1]||k[2]-best.k[2]||(k[3]>best.k[3]?1:k[3]<best.k[3]?-1:0);
+    if(!best||later>0) best={k,m};
   }
   if(!best) return show('mbLatest','');
   const m=best.m;

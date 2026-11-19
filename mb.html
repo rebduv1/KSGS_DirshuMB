@@ -406,7 +406,10 @@ async function boot(){
   if(bad.length) console.warn('Skipped — filename does not match MB-OC-###-###-###:\n'+bad.join('\n'));
 
   if(!list.length){ $('pick').innerHTML='<option>No shiurim posted yet</option>'; return; }
-  list.sort((a,b)=>(b.siman-a.siman)||((b.skFrom||0)-(a.skFrom||0)));
+  /* newest first: by siman, then first s"k; when two start on the same s"k
+     (a long s"k split over days), the one that goes further / is later wins */
+  list.sort((a,b)=>(b.siman-a.siman)||((b.skFrom||0)-(a.skFrom||0))
+                 ||((b.skTo||0)-(a.skTo||0))||String(b.file).localeCompare(String(a.file)));
 
   const sel=$('pick');
   sel.innerHTML='<option value="" selected>Select a shiur\u2026</option>';
